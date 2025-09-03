@@ -4,7 +4,7 @@ from discord import app_commands
 from typing import Literal
 import discord
 
-developers = loadJSON("developers")
+
 
 
 class Reload(commands.Cog):
@@ -14,13 +14,18 @@ class Reload(commands.Cog):
 
     @app_commands.command(name="reload", description="[DEV ONLY]")
     async def reload(self, interaction: discord.Interaction, cog: Literal[
-        "About", "Announce", "Bind", "Help", "Ping", "Reload", "Settings", "Status", "Leaderboard", "Userinfo"
+        "About", "Announce", "Bind", "Help", "Ping_Stats", "Reload", "Settings", "Status", "Leaderboard", "Userinfo",
+        "Ban", "Developers", "Kick", "Rebind", "Status", "Unbind"
     ]) -> None:
-        if developers[interaction.user.id]:
-            await self.bot.reload_extension(name=f"cogs.{cog.lower()}")
-            await interaction.response.send_message(content=f"```diff\n+ Reloaded {cog} cog!```", ephemeral=True)
-        else:
+        developers = loadJSON("developers")
+        user_id = str(interaction.user.id)
+
+        if user_id not in developers or not developers[user_id]:
             await interaction.response.send_message(content="You can't use this command. :)", ephemeral=True)
+            return
+
+        await self.bot.reload_extension(name=f"cogs.{cog.lower()}")
+        await interaction.response.send_message(content=f"```diff\n+ Reloaded {cog} cog!```", ephemeral=True)
 
     @reload.error
     async def error(self, interaction: discord.Interaction, error: discord.app_commands.AppCommandError) -> None:

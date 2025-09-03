@@ -3,7 +3,6 @@ from discord.ext import commands
 from discord import app_commands
 import discord
 
-guild_settings = loadJSON("guild_settings")
 
 class Leaderboard(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
@@ -12,6 +11,7 @@ class Leaderboard(commands.Cog):
     @app_commands.command(name="leaderboard", description="[ADMIN ONLY] Post the leaderboard to the bound leaderboard channel")
     async def leaderboard(self, interaction: discord.Interaction) -> None:
         guild_id = str(interaction.guild.id)
+        guild_settings = loadJSON("guild_settings")
 
         # Check if guild has settings
         if guild_id not in guild_settings:

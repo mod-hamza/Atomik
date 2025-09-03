@@ -3,7 +3,6 @@ from discord.ext import commands
 from discord import app_commands
 import discord
 
-guild_settings = loadJSON("guild_settings")
 
 class Announce(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
@@ -18,6 +17,7 @@ class Announce(commands.Cog):
         title: str,
         message: str
     ) -> None:
+        guild_settings = loadJSON("guild_settings")
         if not interaction.user.guild_permissions.administrator:
             return await interaction.response.send_message("❌ You must be an admin to use this command.", ephemeral=True)
 

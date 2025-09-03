@@ -3,7 +3,6 @@ from discord.ext import commands
 from discord import app_commands
 import discord
 
-guild_settings = loadJSON("guild_settings")
 
 class Status(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
@@ -15,6 +14,7 @@ class Status(commands.Cog):
             return await interaction.response.send_message("❌ You must be an admin to use this command.", ephemeral=True)
 
         guild_id = str(interaction.guild.id)
+        guild_settings = loadJSON("guild_settings")
 
         # Create the status embed
         embed = discord.Embed(

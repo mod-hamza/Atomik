@@ -4,7 +4,7 @@ from discord import app_commands
 from typing import Literal
 import discord
 
-developers = loadJSON("developers")
+
 
 
 class Developers(commands.Cog):
@@ -17,17 +17,21 @@ class Developers(commands.Cog):
     @app_commands.user_install()
     @app_commands.guild_install()
     async def developers(self, interaction: discord.Interaction, action: Literal["add", "remove"], user: discord.User) -> None:
-        if developers[interaction.user.id]:
-            if action == "add":
-                developers[user.id] = True
-                saveJSON(developers, "developers")
-                await interaction.response.send_message(content=f"```diff\n+ Added {user} to developers!```", ephemeral=True)
-            elif action == "remove":
-                developers[user.id] = False
-                saveJSON(developers, "developers")
-                await interaction.response.send_message(content=f"```diff\n- Removed {user} from developers!```", ephemeral=True)
-        else:
+        developers = loadJSON("developers")
+        user_id = str(interaction.user.id)
+
+        if user_id not in developers or not developers[user_id]:
             await interaction.response.send_message(content="You can't use this command. :)", ephemeral=True)
+            return
+
+        if action == "add":
+            developers[str(user.id)] = True
+            saveJSON(developers, "developers")
+            await interaction.response.send_message(content=f"```diff\n+ Added {user} to developers!```", ephemeral=True)
+        elif action == "remove":
+            developers[str(user.id)] = False
+            saveJSON(developers, "developers")
+            await interaction.response.send_message(content=f"```diff\n- Removed {user} from developers!```", ephemeral=True)
 
     @developers.error
     async def error(self, interaction: discord.Interaction, error: discord.app_commands.AppCommandError) -> None:

@@ -13,25 +13,25 @@ class Ban(commands.Cog):
     @app_commands.describe(reason="Reason for ban")
     async def ban(self, interaction:discord.Interaction, member:discord.Member, reason:Optional[str]):
         if not interaction.user.guild_permissions.administrator:
-            reason = "No Reason Provided" if reason is None else reason
-            guild_name = interaction.guild.name
-            await interaction.response.defer(thinking=True, ephemeral=True)
-            embed = discord.Embed(title="Ban", description=f"You have been banned from {guild_name}")
-            embed.add_field(name = "Reason", value=f"{reason}")
-            try:
-                await member.send(embed=embed)
-            except:
-                pass
+            await interaction.response.send_message("❌ You must be an admin to use this command.", ephemeral=True)
+            return
 
-            try:
-                await member.ban(reason=reason, delete_message_days=7)
-                await interaction.followup.send(f"{member.mention} was banned.")
+        reason = "No Reason Provided" if reason is None else reason
+        guild_name = interaction.guild.name
+        await interaction.response.defer(thinking=True, ephemeral=True)
+        embed = discord.Embed(title="Ban", description=f"You have been banned from {guild_name}")
+        embed.add_field(name = "Reason", value=f"{reason}")
+        try:
+            await member.send(embed=embed)
+        except:
+            pass
 
-            except:
-                await interaction.followup.send(f"Failed. Please ban {member.mention} yourself.")
+        try:
+            await member.ban(reason=reason, delete_message_days=7)
+            await interaction.followup.send(f"{member.mention} was banned.")
 
-        else:
-            await interaction.response.send_message("Haha, no", ephemeral=True)
+        except:
+            await interaction.followup.send(f"Failed. Please ban {member.mention} yourself.")
 
 
     @ban.error

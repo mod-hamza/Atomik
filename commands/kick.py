@@ -13,25 +13,25 @@ class Kick(commands.Cog):
     @app_commands.describe(reason="Reason for kick")
     async def kick(self, interaction:discord.Interaction, member:discord.Member, reason:Optional[str]):
         if not interaction.user.guild_permissions.administrator:
-            reason = "No Reason Provided" if reason is None else reason
-            guild_name = interaction.guild.name
-            await interaction.response.defer(thinking=True, ephemeral=True)
-            embed = discord.Embed(title="Kick", description=f"You have been kicked from {guild_name}")
-            embed.add_field(name = "Reason", value=f"{reason}")
-            try:
-                await member.send(embed=embed)
-            except:
-                pass
+            await interaction.response.send_message("❌ You must be an admin to use this command.", ephemeral=True)
+            return
 
-            try:
-                await member.kick(reason=reason, delete_message_days=7)
-                await interaction.followup.send(f"{member.mention} was kicked.")
+        reason = "No Reason Provided" if reason is None else reason
+        guild_name = interaction.guild.name
+        await interaction.response.defer(thinking=True, ephemeral=True)
+        embed = discord.Embed(title="Kick", description=f"You have been kicked from {guild_name}")
+        embed.add_field(name = "Reason", value=f"{reason}")
+        try:
+            await member.send(embed=embed)
+        except:
+            pass
 
-            except:
-                await interaction.followup.send(f"Failed. Please kick {member.mention} yourself.")
+        try:
+            await member.kick(reason=reason)
+            await interaction.followup.send(f"{member.mention} was kicked.")
 
-        else:
-            await interaction.response.send_message("Haha, no", ephemeral=True)
+        except:
+            await interaction.followup.send(f"Failed. Please kick {member.mention} yourself.")
 
 
     @kick.error

@@ -25,17 +25,15 @@ def log_uncaught_exceptions(exctype, value, tb):
 sys.excepthook = log_uncaught_exceptions
 
 bot_token=os.getenv("BOT_TOKEN")
-intents=discord.Intents.default()
-intents.members=True
-
+intents=discord.Intents.all()
 
 class Client(commands.Bot):
     def __init__(self) -> None:
         super().__init__(command_prefix=commands.when_mentioned_or('%$'), intents=intents)
         self.cogslist=[
-            "commands.about", "commands.announce", "commands.ban", "commands.bind", "commands.developers", "commands.rebind",
-            "commands.help", "commands.kick", "commands.leaderboard", "commands.ping", "commands.reload", "commands.settings",
-            "commands.status", "commands.userinfo", "commands.unbind"
+            "commands.announce", "commands.ban", "commands.bind", "commands.developers", "commands.rebind",
+            "commands.help", "commands.kick", "commands.leaderboard", "commands.ping_stats", "commands.reload", "commands.settings",
+            "commands.status", "commands.userinfo", "commands.unbind", "commands.settings"
         ]
 
     async def setup_hook(self) -> None:

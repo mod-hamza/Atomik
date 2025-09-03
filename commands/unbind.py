@@ -4,7 +4,7 @@ from discord import app_commands
 from typing import Literal
 import discord
 
-guild_settings = loadJSON("guild_settings")
+
 
 class Unbind(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
@@ -17,6 +17,7 @@ class Unbind(commands.Cog):
         interaction: discord.Interaction,
         resource: Literal["leaderboard", "announcements", "logs", "stats"]
     ) -> None:
+        guild_settings = loadJSON("guild_settings")
         if not interaction.user.guild_permissions.administrator:
             return await interaction.response.send_message("❌ You must be an admin to use this command.", ephemeral=True)
 
@@ -51,7 +52,7 @@ class Unbind(commands.Cog):
         if not guild_settings[guild_id]:
             del guild_settings[guild_id]
 
-        saveJSON("guild_settings", guild_settings)
+        saveJSON(guild_settings, "guild_settings")
 
         await interaction.response.send_message(
             f"✅ Unbound **{resource}** from its channel", ephemeral=True

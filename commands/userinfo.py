@@ -14,24 +14,27 @@ class UserInfo(commands.Cog):
         embed.add_field(
             name = "Basic Info",
             value = (
-                f"**User ID**: {member.id}\n"
-                f"**Display Name**: {member.display_name}\n"
-                f"**Bot?**: {member.bot}\n"
-            )
+                f"User ID: `{member.id}`\n"
+                f"Display Name: `{member.display_name}`\n"
+                f"Bot?: `{member.bot}`\n"
+            ),
+            inline = False
         )
         embed.add_field(
             name = "Events",
             value = (
-                f"**Registered Date**: {member.created_at} <t:{int(member.created_at.timestamp())}:R>\n"
-                f"**Joined At**: {member.joined_at} <t:{int(member.joined_at.timestamp())}:R>\n"
-            )
+                f"Registered Date: <t:{int(member.created_at.timestamp())}:R>\n"
+                f"Joined At: <t:{int(member.joined_at.timestamp())}:R>\n"
+            ),
+            inline = False
         )
         embed.add_field(
             name = "Server Roles",
             value = (
                 f"{' '.join(role.mention for role in member.roles if role.name != '@everyone')}"
                 if member.roles else "No Roles"
-            )
+            ),
+            inline = False
         )
         embed.set_thumbnail(url=member.avatar.url if member.avatar else member.default_avatar.url)
         await interaction.response.send_message(embed=embed)

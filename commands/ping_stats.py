@@ -3,7 +3,6 @@ from discord.ext import commands
 from discord import app_commands
 import discord
 
-guild_settings = loadJSON("guild_settings")
 
 class PingStats(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
@@ -14,26 +13,27 @@ class PingStats(commands.Cog):
         if not interaction.user.guild_permissions.administrator:
             return await interaction.response.send_message("❌ You must be an admin to use this command.", ephemeral=True)
 
+        guild_settings = loadJSON("guild_settings")
         guild_id = str(interaction.guild.id)
 
         # Check if guild has settings
         if guild_id not in guild_settings:
             return await interaction.response.send_message(
-                "❌ No stats channel is bound for this server. Please use `/bind resource:stats channel:#your-channel` to set one up first.",
+                "❌ No stats channel is bound for this server. Please use `/bind` to set one up first.",
                 ephemeral=True
             )
 
         # Check if bindings exist
         if "bindings" not in guild_settings[guild_id]:
             return await interaction.response.send_message(
-                "❌ No stats channel is bound for this server. Please use `/bind resource:stats channel:#your-channel` to set one up first.",
+                "❌ No stats channel is bound for this server. Please use `/bind` to set one up first.",
                 ephemeral=True
             )
 
         # Check if stats is specifically bound
         if "stats" not in guild_settings[guild_id]["bindings"]:
             return await interaction.response.send_message(
-                "❌ No stats channel is bound for this server. Please use `/bind resource:stats channel:#your-channel` to set one up first.",
+                "❌ No stats channel is bound for this server. Please use `/bind` to set one up first.",
                 ephemeral=True
             )
 
@@ -43,7 +43,7 @@ class PingStats(commands.Cog):
 
         if not stats_channel:
             return await interaction.response.send_message(
-                f"❌ The bound stats channel <#{stats_channel_id}> no longer exists. Please use `/rebind resource:stats channel:#new-channel` to update the binding.",
+                f"❌ The bound stats channel <#{stats_channel_id}> no longer exists. Please use `/rebind` to update the binding.",
                 ephemeral=True
             )
 
